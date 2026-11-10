@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+    <!-- header -->
+    <header>
+        <h2> Gacha Around the World</h2>
+        <nav>
+            <button onclick="showPage('home')">Home</button>
+            <button onclick="showPage('passport')"> My Passport</button>
+        </nav>
+    </header>
+
+    <!-- home -->
+    <section id="homePage">
+        <h1>Gacha Around the World</h1>
+        <p class="subtitle">
+            Spin, discover, and collect countries around the world!
+        </p>
+
+        <div class="homeLayout">
+            
+            <div class="rarityLegend">
+                <h2>Rarity Legend</h2>
+                <p>⚪ Common <span>50%</span></p>
+                <p>🔵 Rare <span>30%</span></p>
+                <p>🟣 Epic <span>15%</span></p>
+                <p>🟡 Legendary <span>5%</span></p>
+                <p>Smaller populations mean rarer countries!</p>
+            </div>
+
+            <div class="machineArea">
+                <h2>Try Your Luck!</h2>
+                <img id="gachaMachine" src="images/gachaMachine.png" alt="Gacha Machine">
+                <button id="spinButton" onclick="spinGacha()"> SPIN </button>
+
+                <p id="message">Loading countries...</p>
+                <div id="capsule" class="capsule hidden"></div>
+            </div>
+
+            <div class="resultArea">
+                <h2> Mystery Country</h2>
+                <div id="countryCard" class="hidden">
+                    <h3 id="rarityText"></h3>
+                    <img id="countryFlag" alt="Country flag">
+                    <h2 id="countryName"></h2>
+                    <p>Capital: <span id="capital"></span></p>
+                    <p>Population: <span id="population"></span></p>
+                    <p>Region: <span id="region"></span></p>
+                    <p>Weather: <span id="weather"></span></p>
+                    <button onclick="saveCountry()"> Save to Passport </button>
+                </div>
+                <p id="emptyMessage"> Spin the machine to discover a country! </p>
+            </div>            
+        </div>
+
+    </section>
+
+    <!-- passport -->
+    <section id="passportPage" class="hidden">
+
+        <h1> My Passport</h1>
+            <p class="subtitle"> Collect countries from every continent! </p>
+
+            <div class="passportInfo">
+                <h2> Collection Progress</h2>
+                <h3 id="collectionCount"> 0 Countries Collected</h3>
+            
+                <div class="progressBar">
+                    <div id="progressFill"></div>
+                </div>
+            </div>
+
+            <div id="passportCollection"></div>
+
+            <button class="backButton" onclick="showPage('home')"> Back to Gacha </button>
+
+    </section>
+
+    <footer>
+        <p>Gacha Around the World </p>
+        <p> Images gerenated by AI</p>
+    </footer>
+
+    
+    <script src="js/script.js" defer></script>
+    
+</body>
+</html>
+
+<!-- References -->
+<!-- https://ca.pinterest.com/pin/495396027785518817/ -->
