@@ -11,6 +11,7 @@ if (localStorage.getItem("passport")) {
     passport = JSON.parse(localStorage.getItem("passport"));
 }
 
+// show the home page or passport page based on user selection
 function showPage(page) {
 
     document.querySelector("#homePage").className = "hidden";
@@ -24,6 +25,7 @@ function showPage(page) {
     }
 }
 
+// Fetch country data from API
  async function loadCountries() {
     try {
         const response = await fetch(countryApi);
@@ -47,6 +49,7 @@ function showPage(page) {
     }
 }
 
+// Determine the rarity of a country based on its population
 function getRarity(population) {
     if (population > 50000000) {
         return "Common";
@@ -59,6 +62,7 @@ function getRarity(population) {
     }
 }
 
+// pick a random country based on rarity
 function pickCountry() {
     let random = Math.random() * 100;
     let rarity;
@@ -89,6 +93,7 @@ function pickCountry() {
     }
 }
 
+// spin the gacha machine and display the selected country
 async function spinGacha() {
 
     if (countries.length === 0) {
@@ -117,6 +122,7 @@ async function spinGacha() {
     document.querySelector("#spinButton").disabled = false;
 }
 
+// fetch weather data for the selected country using Open-Meteo API
 async function getWeather() {
 
     selectedWeather = "Unavailable";
@@ -168,7 +174,7 @@ async function getWeather() {
     }
 }
 
-
+// display the selected country information on the page from API
 function showCountry() {
     let country = selectedCountry;
     let rarity = getRarity(country.population);
@@ -206,6 +212,7 @@ function showCountry() {
     }
 }
 
+// save the selected country to the passport collection
 function saveCountry() {
     if (!selectedCountry) {
         return;
@@ -231,6 +238,7 @@ function filterRarity(rarity) {
     displayPassport();
 }
 
+// update the rarity statistics based on the passport collection
 function updateRarityStats() {
     let common = 0;
     let rare = 0;
@@ -257,6 +265,7 @@ function updateRarityStats() {
     document.querySelector("#legendaryCount").textContent = legendary;
 }
 
+// display the passport collection with filtering options
 function displayPassport() {
 
     updateRarityStats();
@@ -302,12 +311,11 @@ function displayPassport() {
             collection.innerHTML = '<p class="emptyMessage">🌍 No countries collected yet!</p>';
         } else {
             collection.innerHTML = '<p class = "emptyMessage">No countries found in this category!</p>';
+        }
     }
 }
 
-
-}
-
+// remove country from passport collection
 function removeCountry(index) {
     passport.splice(index, 1);
     localStorage.setItem("passport", JSON.stringify(passport));
