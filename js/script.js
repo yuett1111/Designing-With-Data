@@ -2,6 +2,8 @@ let countries = [];
 let selectedCountry;
 let selectedWeather = "Unavailable";
 let passport = [];
+let currentRegion = "All";
+let currentRarity = "All";
 
 const countryApi = "https://pw-d20261017a29.plainwork-apps.workers.dev/v3.1/all?fields=name,capital,flags,population,region,capitalInfo,cca3,unMember";
 
@@ -175,8 +177,11 @@ function showCountry() {
         country.name.common;
     document.querySelector("#countryFlag").src =
         country.flags.png;
-    document.querySelector("#capital").textContent =
-        country.capital[0];
+    if (country.capital && country.capital.length > 0) {
+        document.querySelector("#capital").textContent = country.capital[0];
+    } else {
+    document.querySelector("#capital").textContent = "N/A";
+    }
     document.querySelector("#population").textContent =
         country.population.toLocaleString();
     document.querySelector("#region").textContent =
@@ -216,8 +221,45 @@ function saveCountry() {
     alert(selectedCountry.name.common + " saved to passport!");
 }
 
+function filterRegion(region) {
+    currentRegion = region;
+    displayPassport();
+}
+
+function filterRarity(rarity) {
+    currentRarity = rarity;
+    displayPassport();
+}
+
+function updateRarityStats() {
+    let common = 0;
+    let rare = 0;
+    let epic = 0;
+    let legendary = 0;
+
+    for (let i = 0; i < passport.length; i++) {
+        let rarity = getRarity(passport[i].population);
+
+        if (rarity === "Common") {
+            common++;
+        } else if (rarity === "Rare") {
+            rare++;
+        } else if (rarity === "Epic") {
+            epic++;
+        } else if (rarity === "Legendary") {
+            legendary++;
+        }
+    }
+
+    document.querySelector("#commonCount").textContent = common;
+    document.querySelector("#rareCount").textContent = rare;
+    document.querySelector("#epicCount").textContent = epic;
+    document.querySelector("#legendaryCount").textContent = legendary;
+}
 
 function displayPassport() {
+
+    updateRarityStats();
 
     let collection = document.querySelector("#passportCollection");
 
@@ -225,29 +267,45 @@ function displayPassport() {
     document.querySelector("#collectionCount").textContent =
         passport.length + " Countries Collected";
 
-    let progress = passport.length / countries.length * 100;
+    let progress = 0;
+    if (countries.length > 0) {
+        progress = passport.length / countries.length * 100;
+    }
     document.querySelector("#progressFill").style.width =
         progress + "%";
+
+    let visibleCountries = 0;
 
     for (let i = 0; i < passport.length; i++) {
         let country = passport[i];
         let rarity = getRarity(country.population);
 
-        collection.innerHTML +=
-            '<div class="savedCard ' + rarity.toLowerCase() + '">' +
-            '<img src="' + country.flags.png + '">' +
-            '<h3>' + country.name.common + '</h3>' +
-            '<p>Rarity: ' + rarity + '</p>' +
-            '<p>Capital: ' + country.capital[0] + '</p>' +
-            '<p>Population: ' + country.population + '</p>' +
-            '<p>Region: ' + country.region + '</p>' +
-            '<button onclick="removeCountry(' + i + ')">Remove</button>' +
-            '</div>';
+        if ((currentRegion === "All" || country.region === currentRegion) && (currentRarity === "All" || rarity === currentRarity)) {
+
+            visibleCountries++;
+
+            collection.innerHTML +=
+                '<div class="savedCard ' + rarity.toLowerCase() + '">' +
+                '<img src="' + country.flags.png + '">' +
+                '<h3>' + country.name.common + '</h3>' +
+                '<p>Rarity: ' + rarity + '</p>' +
+                '<p>Capital: ' + (country.capital ? country.capital[0] : "N/A") + '</p>' +
+                '<p>Population: ' + country.population.toLocaleString() + '</p>' +
+                '<p>Region: ' + country.region + '</p>' +
+                '<button onclick="removeCountry(' + i + ')">Remove</button>' +
+                '</div>';
+        }
     }
 
-    if (passport.length === 0) {
-        collection.textContent = "No countries collected yet!";
+    if (visibleCountries === 0) {
+        if (passport.length === 0) {
+            collection.innerHTML = '<p class="emptyMessage">🌍 No countries collected yet!</p>';
+        } else {
+            collection.innerHTML = '<p class = "emptyMessage">No countries found in this category!</p>';
     }
+}
+
+
 }
 
 function removeCountry(index) {
